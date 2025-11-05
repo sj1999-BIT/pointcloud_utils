@@ -1,0 +1,45 @@
+ninja_required_version = 1.3
+cxx = c++
+nvcc = /usr/local/cuda/bin/nvcc
+
+cflags = -pthread -B /home/sj1999/anaconda3/envs/pointnet/compiler_compat -DNDEBUG -fwrapv -O2 -Wall -fPIC -O2 -isystem /home/sj1999/anaconda3/envs/pointnet/include -fPIC -O2 -isystem /home/sj1999/anaconda3/envs/pointnet/include -fPIC -I/home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/include -I/home/sj1999/anaconda3/envs/pointnet/lib/python3.11/site-packages/torch/include -I/home/sj1999/anaconda3/envs/pointnet/lib/python3.11/site-packages/torch/include/torch/csrc/api/include -I/usr/local/cuda/include -I/home/sj1999/anaconda3/envs/pointnet/include/python3.11 -c
+post_cflags = -O3 -DTORCH_API_INCLUDE_EXTENSION_H -DTORCH_EXTENSION_NAME=_ext -std=c++17
+cuda_cflags = -I/home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/include -I/home/sj1999/anaconda3/envs/pointnet/lib/python3.11/site-packages/torch/include -I/home/sj1999/anaconda3/envs/pointnet/lib/python3.11/site-packages/torch/include/torch/csrc/api/include -I/usr/local/cuda/include -I/home/sj1999/anaconda3/envs/pointnet/include/python3.11 -c
+cuda_post_cflags = -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr --compiler-options ''"'"'-fPIC'"'"'' -O3 -Xfatbin -compress-all -DTORCH_API_INCLUDE_EXTENSION_H -DTORCH_EXTENSION_NAME=_ext -gencode=arch=compute_120,code=sm_120 -gencode=arch=compute_75,code=sm_75 -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_86,code=sm_86 -gencode=arch=compute_89,code=sm_89 -std=c++17
+cuda_dlink_post_cflags = 
+sycl_dlink_post_cflags = 
+ldflags = 
+
+rule compile
+  command = $cxx -MMD -MF $out.d $cflags -c $in -o $out $post_cflags
+  depfile = $out.d
+  deps = gcc
+
+rule cuda_compile
+  depfile = $out.d
+  deps = gcc
+  command = $nvcc --generate-dependencies-with-compile --dependency-output $out.d $cuda_cflags -c $in -o $out $cuda_post_cflags
+
+
+
+
+
+
+
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/ball_query.o: compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/ball_query.cpp
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/ball_query_gpu.o: cuda_compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/ball_query_gpu.cu
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/bindings.o: compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/bindings.cpp
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/group_points.o: compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/group_points.cpp
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/group_points_gpu.o: cuda_compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/group_points_gpu.cu
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/interpolate.o: compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/interpolate.cpp
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/interpolate_gpu.o: cuda_compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/interpolate_gpu.cu
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/sampling.o: compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/sampling.cpp
+build /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/build/temp.linux-x86_64-cpython-311/pointnet2_ops/_ext-src/src/sampling_gpu.o: cuda_compile /home/sj1999/PointCloud/PCT_Pytorch/pointnet2_ops_lib/pointnet2_ops/_ext-src/src/sampling_gpu.cu
+
+
+
+
+
+
+
+
